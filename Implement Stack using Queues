@@ -1,0 +1,38 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+class MyStack:
+
+    def __init__(self):
+        self.stack_push = None
+        self.stack_pop = None
+
+    def push(self, x: int) -> None:
+        new_node = ListNode(x)
+        new_node.next = self.stack_push
+        self.stack_push = new_node
+        if not self.stack_pop:
+            self.stack_pop = self.stack_push
+        
+
+    def pop(self) -> int:
+        if not self.stack_push:
+            return None
+        val = self.stack_push.val
+        self.stack_push = self.stack_push.next
+        if self.stack_pop.val == val:
+            self.stack_pop = self.stack_pop.next
+        return val
+        
+
+    def top(self) -> int:
+        if self.stack_push:
+            return self.stack_push.val
+        return None
+        
+
+    def empty(self) -> bool:
+        return not self.stack_push and not self.stack_pop
+        
+
