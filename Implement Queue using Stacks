@@ -1,0 +1,44 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class MyQueue:
+
+    def __init__(self):
+        self.stack_push = None
+        self.stack_pop = None
+
+    def push(self, x: int) -> None:
+        if not self.stack_push:
+            self.stack_push = ListNode(x)
+            self.stack_pop = self.stack_push
+        else:
+            self.stack_push.next = ListNode(x)
+            self.stack_push = self.stack_push.next
+
+    def _move_elements(self):
+        if not self.stack_pop:
+            while self.stack_push:
+                node = self.stack_push
+                self.stack_push = self.stack_push.next
+                node.next = self.stack_pop
+                self.stack_pop = node
+
+    def pop(self) -> int:
+        self._move_elements()
+        if not self.stack_pop:
+            return None
+        val = self.stack_pop.val
+        self.stack_pop = self.stack_pop.next
+        return val
+
+    def peek(self) -> int:
+        self._move_elements()
+        if not self.stack_pop:
+            return None
+        return self.stack_pop.val
+
+    def empty(self) -> bool:
+        self._move_elements()
+        return not self.stack_pop
