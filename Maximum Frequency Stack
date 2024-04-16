@@ -1,0 +1,52 @@
+from collections import deque, defaultdict
+
+class Node:
+    def __init__(self, val, prev=None, next=None):
+        self.val = val
+        self.prev = prev
+        self.next = next
+
+class LinkedList:
+    def __init__(self):
+        self.head = Node(0)
+        self.tail = Node(0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def insert(self, node):
+        node.next = self.head.next
+        node.prev = self.head
+        self.head.next.prev = node
+        self.head.next = node
+
+    def remove(self, node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+
+class FreqStack:
+    def __init__(self):
+        self.freq = defaultdict(int)
+        self.group = defaultdict(deque)
+        self.ll = LinkedList()
+        self.maxfreq = 0
+
+    def push(self, x):
+        self.freq[x] += 1
+        f = self.freq[x]
+        if f > self.maxfreq:
+            self.maxfreq = f
+        node = Node(x)
+        self.group[f].append(node)
+        self.ll.insert(node)
+
+    def pop(self):
+        nodes = self.group[self.maxfreq]
+        node = nodes[-1]
+        nodes.pop()
+        if not nodes:
+            self.maxfreq -= 1
+        self.ll.remove(node)
+        self.freq[node.val] -= 1
+        if self.freq[node.val] == 0:
+            del self.freq[node.val]
+        return node.val
